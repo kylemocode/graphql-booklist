@@ -1,0 +1,36 @@
+version: '3.6'
+
+services:
+  smart-brain-api:
+    container_name: backend
+    # image: node:8.11.1
+    build:  ./ #build allows us to build from our own dockerfile instead of a default image like node:8.11.1
+    command: npm start
+    working_dir: /usr/src/smart-brian-api
+    environment:
+      POSTGRES_URI: postgres://Oldmo:secret@postgres:5432/smart-brain-docker
+    links:
+      - postgres
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./:/usr/src/smart-brian-api #不用每次更改都重新build
+
+  postgres:
+    environment:
+      POSTGRES_USER: Oldmo
+      POSTGRES_PASSWORD: secret
+      POSTGRES_DB: smart-brain-docker
+      POSTGRES_HOST: postgres
+    image: postgres
+    ports:
+      - "5432:5432"
+
+  
+# cmd 打 docker-compose build
+# docker-compose run smart-brain-api
+# docker-compose down
+# docker-compose up --build
+
+# docker-compose up -d
+# docker-compose exec smart-brain-api bash
